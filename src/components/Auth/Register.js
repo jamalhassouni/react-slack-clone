@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import firebase from "../../firebase";
 import {
   Grid,
   Form,
@@ -10,8 +11,32 @@ import {
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 class Register extends Component {
-  handleChange = () => {};
+  state = {
+    username: "",
+    email: "",
+    password: "",
+    passwordConfirmation: ""
+  };
+
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+  handleSubmit = event => {
+    event.preventDefault();
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(createdUser => {
+        console.log(createdUser);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
   render() {
+    const { username, email, password, passwordConfirmation } = this.state;
     return (
       <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{ maxWidth: 450 }}>
@@ -19,7 +44,7 @@ class Register extends Component {
             <Icon name="puzzle piece" color="orange" />
             Register for slackClone
           </Header>
-          <Form>
+          <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
               <Form.Input
                 fluid
@@ -28,6 +53,7 @@ class Register extends Component {
                 icon="user"
                 iconPosition="left"
                 placeholder="Username"
+                value={username}
                 onChange={this.handleChange}
               />
               <Form.Input
@@ -37,6 +63,7 @@ class Register extends Component {
                 icon="mail"
                 iconPosition="left"
                 placeholder="Email"
+                value={email}
                 onChange={this.handleChange}
               />
               <Form.Input
@@ -46,6 +73,7 @@ class Register extends Component {
                 icon="lock"
                 iconPosition="left"
                 placeholder="Password"
+                value={password}
                 onChange={this.handleChange}
               />
               <Form.Input
@@ -55,6 +83,7 @@ class Register extends Component {
                 icon="repeat"
                 iconPosition="left"
                 placeholder="Password"
+                value={passwordConfirmation}
                 onChange={this.handleChange}
               />
               <Button color="orange" fluid size="large">
