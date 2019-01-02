@@ -139,8 +139,8 @@ class Register extends Component {
     return (
       <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as="h2" icon color="orange" textAlign="center">
-            <Icon name="puzzle piece" color="orange" />
+          <Header as="h1" icon color="violet" textAlign="center">
+            <Icon name="puzzle piece" color="violet" />
             Register for slackClone
           </Header>
           <Form onSubmit={this.handleSubmit} size="large">
@@ -192,7 +192,7 @@ class Register extends Component {
               <Button
                 disabled={loading}
                 className={loading ? "loading" : ""}
-                color="orange"
+                color="violet"
                 fluid
                 size="large"
               >
