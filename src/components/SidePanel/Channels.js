@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import firebase from "../../firebase";
 import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
+
 export default class Channels extends Component {
   state = {
     user: this.props.currentUser,
@@ -9,6 +10,20 @@ export default class Channels extends Component {
     channelDetails: "",
     channelsRef: firebase.database().ref("channels"),
     modal: false
+  };
+
+  componentDidMount() {
+    this.addListeners();
+  }
+
+  addListeners = () => {
+    let loadedChannels = [];
+    this.state.channelsRef.on("child_added", snap => {
+      loadedChannels.push(snap.val());
+      this.setState({
+        channels: loadedChannels
+      });
+    });
   };
 
   openModal = () => this.setState({ modal: true });
@@ -54,6 +69,19 @@ export default class Channels extends Component {
   isFormValid = ({ channelName, channelDetails }) =>
     channelName && channelDetails;
 
+  displayChannels = channels =>
+    channels.length > 0 &&
+    channels.map(channel => (
+      <Menu.Item
+        key={channel.id}
+        onClick={() => console.log(channel)}
+        name={channel.name}
+        style={{ opacity: 0.7 }}
+      >
+        # {channel.name}
+      </Menu.Item>
+    ));
+
   render() {
     const { channels, modal } = this.state;
     return (
@@ -66,7 +94,7 @@ export default class Channels extends Component {
             ({channels.length}) <Icon name="add" onClick={this.openModal} />
           </Menu.Item>
 
-          {/* channels */}
+          {this.displayChannels(channels)}
         </Menu.Menu>
 
         {/*  Add Channel modal */}
