@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import firebase from "../../firebase";
+import { connect } from "react-redux";
+import { setCurrentChannel } from "../../actions";
 import { Menu, Icon, Modal, Form, Input, Button } from "semantic-ui-react";
 
-export default class Channels extends Component {
+class Channels extends Component {
   state = {
     user: this.props.currentUser,
     channels: [],
@@ -66,6 +68,10 @@ export default class Channels extends Component {
     }
   };
 
+  changeChannel = channel => {
+    this.props.setCurrentChannel(channel);
+  };
+
   isFormValid = ({ channelName, channelDetails }) =>
     channelName && channelDetails;
 
@@ -74,7 +80,7 @@ export default class Channels extends Component {
     channels.map(channel => (
       <Menu.Item
         key={channel.id}
-        onClick={() => console.log(channel)}
+        onClick={() => this.changeChannel(channel)}
         name={channel.name}
         style={{ opacity: 0.7 }}
       >
@@ -136,3 +142,7 @@ export default class Channels extends Component {
     );
   }
 }
+export default connect(
+  null,
+  { setCurrentChannel }
+)(Channels);
