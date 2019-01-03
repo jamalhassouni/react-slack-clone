@@ -8,7 +8,7 @@ export default class MessagesHeader extends Component {
         <Header fluid="true" as="h2" floated="left" style={{ marginBottom: 0 }}>
           <span>
             Channel
-            <Icon name="star outilne" color="black" />
+            <Icon name="star outline" color="black" />
           </span>
           <Header.Subheader>2 Users</Header.Subheader>
         </Header>
