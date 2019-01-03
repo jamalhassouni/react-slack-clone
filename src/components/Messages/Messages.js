@@ -56,6 +56,7 @@ export default class Messages extends Component {
             {this.displayMessages(messages)}
           </Comment.Group>
         </Segment>
+
         <MessageForm
           messagesRef={messagesRef}
           currentChannel={channel}
