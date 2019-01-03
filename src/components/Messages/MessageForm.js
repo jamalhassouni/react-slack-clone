@@ -4,7 +4,7 @@ import firebase from "../../firebase";
 
 export default class MessageForm extends Component {
   state = {
-    messge: "",
+    message: "",
     channel: this.props.currentChannel,
     user: this.props.currentUser,
     loading: false,
@@ -55,13 +55,14 @@ export default class MessageForm extends Component {
   };
 
   render() {
-    const { errors } = this.state;
+    const { errors, message, loading } = this.state;
     return (
       <Segment className="message__form">
         <Input
           fluid
           name="message"
           onChange={this.handleChane}
+          value={message}
           style={{ marginBottom: "0.7em" }}
           label={<Button icon="add" />}
           labelPosition="left"
@@ -76,6 +77,7 @@ export default class MessageForm extends Component {
           <Button
             onClick={this.sendMessage}
             color="orange"
+            disabled={loading}
             content="Add Reply"
             labelPosition="left"
             icon="edit"
