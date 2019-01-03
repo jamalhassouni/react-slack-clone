@@ -13,7 +13,7 @@ class UserPanel extends Component {
       text: (
         <span>
           Signed in as
-          <strong>{this.state.user.displayName}</strong>
+          <strong>{" " + this.state.user.displayName}</strong>
         </span>
       ),
       disabled: true
