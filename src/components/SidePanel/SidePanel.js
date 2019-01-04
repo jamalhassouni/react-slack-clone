@@ -7,16 +7,16 @@ import Starred from "./Starred";
 
 export default class SidePanel extends Component {
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, primaryColor } = this.props;
     return (
       <Menu
         size="large"
         inverted
         fixed="left"
         vertical
-        style={{ backgroundColor: "#4c3c4c", fontSize: "1.2rem" }}
+        style={{ backgroundColor: primaryColor, fontSize: "1.2rem" }}
       >
-        <UserPanel currentUser={currentUser} />
+        <UserPanel primaryColor={primaryColor} currentUser={currentUser} />
         <Starred currentUser={currentUser} />
         <Channels currentUser={currentUser} />
         <DirectMessages currentUser={currentUser} />
