@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import firebase from "../../firebase";
+import { connect } from "react-redux";
+import { setCurrentChannel, setPrivateChannel } from "../../actions";
 import { Menu, Icon } from "semantic-ui-react";
 
-export default class DirectMessages extends Component {
+class DirectMessages extends Component {
   state = {
     user: this.props.currentUser,
     users: [],
@@ -66,6 +68,24 @@ export default class DirectMessages extends Component {
 
   isUserOnline = user => user.status === "online";
 
+  changeChannel = user => {
+    const channelId = this.getChannelId(user.uid);
+    const channelData = {
+      id: channelId,
+      name: user.name
+    };
+
+    this.props.setCurrentChannel(channelData);
+    this.props.setPrivateChannel(true);
+  };
+
+  getChannelId = userId => {
+    const currentUserId = this.state.user.uid;
+    return userId < currentUserId
+      ? `${userId}/${currentUserId}`
+      : `${currentUserId}/${userId}`;
+  };
+
   render() {
     const { users } = this.state;
     return (
@@ -78,8 +98,8 @@ export default class DirectMessages extends Component {
         </Menu.Item>
         {users.map(user => (
           <Menu.Item
-            key={user.uuid}
-            onClick={() => console.log(user)}
+            key={user.uid}
+            onClick={() => this.changeChannel(user)}
             style={{ opactiy: 0.7, fontStyle: "italic" }}
           >
             <Icon
@@ -93,3 +113,8 @@ export default class DirectMessages extends Component {
     );
   }
 }
+
+export default connect(
+  null,
+  { setCurrentChannel, setPrivateChannel }
+)(DirectMessages);
