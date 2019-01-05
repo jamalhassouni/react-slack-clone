@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import firebase from "../../firebase";
 import uuidv4 from "uuid/v4";
-import { Segment, Button, Input } from "semantic-ui-react";
+import { Segment, Button, Input, Ref } from "semantic-ui-react";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import FileModal from "./FileModal";
@@ -20,15 +20,42 @@ export default class MessageForm extends Component {
     loading: false,
     errors: [],
     modal: false,
-    emojiPicker: false
+    emojiPicker: false,
+    style: null
   };
 
+  componentDidMount() {
+    document.addEventListener("mousedown", this.handleClickOutsidePicker);
+  }
   componentWillUnmount() {
     if (this.state.uploadTask !== null) {
       this.state.uploadTask.cancel();
       this.setState({ uploadTask: null });
     }
+    document.removeEventListener("mousedown", this.handleClickOutsidePicker);
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.emojiPicker !== this.state.emojiPicker) {
+      if (this.state.emojiPicker === true) {
+        this.setState({
+          style: {
+            background: "transparent",
+            border: 0
+          }
+        });
+      } else {
+        this.setState({
+          style: null
+        });
+      }
+    }
+  }
+
+  handleClickOutsidePicker = event => {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.setState({ emojiPicker: false });
+    }
+  };
 
   openModal = () => this.setState({ modal: true });
 
@@ -190,15 +217,17 @@ export default class MessageForm extends Component {
     // prettier-ignore
     const { errors, message, loading, modal, uploadState, percentUploaded,emojiPicker } = this.state;
     return (
-      <Segment className="message__form">
+      <Segment className="message__form" style={this.state.style}>
         {emojiPicker && (
-          <Picker
-            set="messenger"
-            onSelect={this.handleAddEmoji}
-            className="emojipicker"
-            title="Pick your emoji"
-            emoji="point_up"
-          />
+          <Ref innerRef={node => (this.wrapperRef = node)}>
+            <Picker
+              set="messenger"
+              onSelect={this.handleAddEmoji}
+              className="emojipicker"
+              title="Pick your emoji"
+              emoji="point_up"
+            />
+          </Ref>
         )}
         <Input
           fluid

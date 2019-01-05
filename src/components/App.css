@@ -25,6 +25,7 @@ body,
 
 /* MessageForm.js */
 .message__form {
+  max-width: 694px;
   position: fixed !important;
   bottom: 1em;
   margin-left: 320px !important;
