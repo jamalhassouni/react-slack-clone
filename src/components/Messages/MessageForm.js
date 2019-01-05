@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import firebase from "../../firebase";
 import uuidv4 from "uuid/v4";
 import { Segment, Button, Input } from "semantic-ui-react";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
 import FileModal from "./FileModal";
 import ProgressBar from "./ProgressBar";
 
@@ -17,7 +19,8 @@ export default class MessageForm extends Component {
     user: this.props.currentUser,
     loading: false,
     errors: [],
-    modal: false
+    modal: false,
+    emojiPicker: false
   };
   openModal = () => this.setState({ modal: true });
 
@@ -25,6 +28,46 @@ export default class MessageForm extends Component {
 
   handleChane = event => {
     this.setState({ [event.target.name]: event.target.value });
+  };
+
+  handletoggelPicker = () => {
+    this.setState({ emojiPicker: !this.state.emojiPicker });
+  };
+
+  handleAddEmoji = emoji => {
+    const oldMessage = this.state.message;
+    //const newMessage = this.colonToUnicode(` ${oldMessage} ${emoji.colons} `);
+    const newMessage = ` ${oldMessage} ${emoji.colons} `;
+    this.setState({ message: newMessage, emojiPicker: false });
+    setTimeout(() => this.messageInputRef.focus(), 0);
+  };
+
+  colonToUnicode = message => {
+    let regex = new RegExp(
+      "(^|\\s)(:[a-zA-Z0-9-_+]+:(:skin-tone-[2-6]:)?)",
+      "g"
+    );
+    let match;
+    while ((match = regex.exec(message))) {
+      let colons = match[2];
+      let offset = match.index + match[1].length;
+      let length = colons.length;
+
+      console.log(colons, offset, length);
+    }
+    /*
+    return message.replace(/:[A-Za-z0-9_+-]+:/g, x => {
+      x = x.replace(/:/g, "");
+      let emoji = emojiIndex.emojis[x];
+      if (typeof emoji !== "undefined") {
+        let unicode = emoji.native;
+        if (typeof unicode !== "undefined") {
+          return unicode;
+        }
+      }
+      x = ":" + x + ":";
+      return x;
+    }); */
   };
 
   createMessage = (fileUrl = null) => {
@@ -163,17 +206,33 @@ export default class MessageForm extends Component {
 
   render() {
     // prettier-ignore
-    const { errors, message, loading, modal, uploadState, percentUploaded } = this.state;
+    const { errors, message, loading, modal, uploadState, percentUploaded,emojiPicker } = this.state;
     return (
       <Segment className="message__form">
+        {emojiPicker && (
+          <Picker
+            set="messenger"
+            onSelect={this.handleAddEmoji}
+            className="emojipicker"
+            title="Pick your emoji"
+            emoji="point_up"
+          />
+        )}
         <Input
           fluid
           name="message"
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChane}
           value={message}
+          ref={node => (this.messageInputRef = node)}
           style={{ marginBottom: "0.7em" }}
-          label={<Button icon="add" />}
+          label={
+            <Button
+              icon={emojiPicker ? "close" : "add"}
+              content={emojiPicker ? "close" : null}
+              onClick={this.handletoggelPicker}
+            />
+          }
           labelPosition="left"
           palceholder="Write your message"
           autoComplete="off"

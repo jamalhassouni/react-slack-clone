@@ -32,6 +32,12 @@ body,
   right: 1em;
   z-index: 200;
 }
+.emojipicker {
+  position: absolute;
+}
+.emoji-mart-emoji {
+  top: 5px;
+}
 
 /* Message.js */
 .message__self {

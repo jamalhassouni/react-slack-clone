@@ -244,7 +244,6 @@ class Messages extends Component {
       messages,
       channel,
       user,
-      progressBar,
       numUniqueUsers,
       searchTerm,
       searchResults,
