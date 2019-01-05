@@ -36,38 +36,9 @@ export default class MessageForm extends Component {
 
   handleAddEmoji = emoji => {
     const oldMessage = this.state.message;
-    //const newMessage = this.colonToUnicode(` ${oldMessage} ${emoji.colons} `);
     const newMessage = ` ${oldMessage} ${emoji.colons} `;
     this.setState({ message: newMessage, emojiPicker: false });
     setTimeout(() => this.messageInputRef.focus(), 0);
-  };
-
-  colonToUnicode = message => {
-    let regex = new RegExp(
-      "(^|\\s)(:[a-zA-Z0-9-_+]+:(:skin-tone-[2-6]:)?)",
-      "g"
-    );
-    let match;
-    while ((match = regex.exec(message))) {
-      let colons = match[2];
-      let offset = match.index + match[1].length;
-      let length = colons.length;
-
-      console.log(colons, offset, length);
-    }
-    /*
-    return message.replace(/:[A-Za-z0-9_+-]+:/g, x => {
-      x = x.replace(/:/g, "");
-      let emoji = emojiIndex.emojis[x];
-      if (typeof emoji !== "undefined") {
-        let unicode = emoji.native;
-        if (typeof unicode !== "undefined") {
-          return unicode;
-        }
-      }
-      x = ":" + x + ":";
-      return x;
-    }); */
   };
 
   createMessage = (fileUrl = null) => {
