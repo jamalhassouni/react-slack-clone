@@ -42,6 +42,9 @@ class Messages extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (prevState.messages !== this.state.messages) {
+      this.setState({ messagesLoading: false });
+    }
     if (this.messagesEnd) {
       this.scrollToBottom();
     }
