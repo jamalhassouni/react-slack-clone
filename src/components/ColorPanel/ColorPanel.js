@@ -33,6 +33,10 @@ class ColorPanel extends Component {
     }
   }
 
+  componentWillUnmount(){
+    this.removeListener();
+  }
+
   addListener = userId => {
     let userColors = [];
     this.state.usersRef.child(`${userId}/colors`).on("child_added", snap => {
@@ -41,6 +45,9 @@ class ColorPanel extends Component {
     });
   };
 
+  removeListener = () => {
+    this.state.usersRef.child(`${this.state.user.uid}/colors`).off();
+  }
   openModal = () => this.setState({ modal: true });
 
   closeModal = () => this.setState({ modal: false });
