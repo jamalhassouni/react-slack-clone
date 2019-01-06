@@ -145,6 +145,9 @@ class Messages extends Component {
       this.countUniqueUsers(loadedMessages);
       this.countUserPosts(loadedMessages);
     });
+    this.setState({
+      messagesLoading: false
+    });
     this.addToListeners(channelId, ref, "child_added");
   };
 
@@ -279,15 +282,19 @@ class Messages extends Component {
       </div>
     ));
 
-  displayMessageSkeleton = loading =>
-    loading ? (
-      <React.Fragment>
-        {[...Array(10)].map((_, i) => (
-          <Skeleton key={i} />
-        ))}
-      </React.Fragment>
-    ) : null;
-
+  displayMessageSkeleton = loading => {
+    if (loading) {
+      return (
+        <React.Fragment>
+          {[...Array(10)].map((_, i) => (
+            <Skeleton key={i} />
+          ))}
+        </React.Fragment>
+      );
+    } else {
+      return null;
+    }
+  };
   render() {
     const {
       messagesRef,
