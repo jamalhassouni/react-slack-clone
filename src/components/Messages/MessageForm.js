@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import firebase from "../../firebase";
 import uuidv4 from "uuid/v4";
-import { Segment, Button, Input, Ref } from "semantic-ui-react";
+import { Segment, Button, Ref, Form, TextArea } from "semantic-ui-react";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import FileModal from "./FileModal";
@@ -21,7 +21,10 @@ export default class MessageForm extends Component {
     errors: [],
     modal: false,
     emojiPicker: false,
-    style: null
+    style: null,
+    textAreaStyle: {
+      width: "92%"
+    }
   };
 
   componentDidMount() {
@@ -41,11 +44,17 @@ export default class MessageForm extends Component {
           style: {
             background: "transparent",
             border: 0
+          },
+          textAreaStyle: {
+            width: "84%"
           }
         });
       } else {
         this.setState({
-          style: null
+          style: null,
+          textAreaStyle: {
+            width: "92%"
+          }
         });
       }
     }
@@ -73,7 +82,7 @@ export default class MessageForm extends Component {
     const oldMessage = this.state.message;
     const newMessage = ` ${oldMessage} ${emoji.colons} `;
     this.setState({ message: newMessage, emojiPicker: false });
-    setTimeout(() => this.messageInputRef.focus(), 0);
+    setTimeout(() => this.messageInputRef.children[1].focus(), 0);
   };
 
   createMessage = (fileUrl = null) => {
@@ -214,10 +223,19 @@ export default class MessageForm extends Component {
   };
 
   render() {
-    // prettier-ignore
-    const { errors, message, loading, modal, uploadState, percentUploaded,emojiPicker } = this.state;
+    const {
+      errors,
+      message,
+      loading,
+      modal,
+      uploadState,
+      percentUploaded,
+      emojiPicker,
+      style,
+      textAreaStyle
+    } = this.state;
     return (
-      <Segment className="message__form" style={this.state.style}>
+      <Segment className="message__form" style={style}>
         {emojiPicker && (
           <Ref innerRef={node => (this.wrapperRef = node)}>
             <Picker
@@ -229,7 +247,7 @@ export default class MessageForm extends Component {
             />
           </Ref>
         )}
-        <Input
+        {/*  <Input
           fluid
           name="message"
           onKeyDown={this.handleKeyDown}
@@ -252,30 +270,58 @@ export default class MessageForm extends Component {
               ? "error"
               : ""
           }
-        />
-        <Button.Group icon widths="2">
-          <Button
-            onClick={this.sendMessage}
-            color="orange"
-            disabled={loading}
-            content="Add Reply"
-            labelPosition="left"
-            icon="edit"
+        /> */}
+        <Form>
+          <Ref innerRef={node => (this.messageInputRef = node)}>
+            <Form.Field
+              control={TextArea}
+              value={message}
+              fluid="true"
+              name="message"
+              onKeyDown={this.handleKeyDown}
+              style={textAreaStyle}
+              className={
+                errors.some(error => error.message.includes("message"))
+                  ? "error"
+                  : ""
+              }
+              rows={2}
+              onChange={this.handleChane}
+              placeholder="Write your message"
+              labelposition="left"
+              label={
+                <Button
+                  icon={emojiPicker ? "close" : "add"}
+                  content={emojiPicker ? "close" : null}
+                  onClick={this.handletoggelPicker}
+                />
+              }
+            />
+          </Ref>
+          <Button.Group icon widths="2">
+            <Button
+              onClick={this.sendMessage}
+              color="orange"
+              disabled={loading}
+              content="Add Reply"
+              labelPosition="left"
+              icon="edit"
+            />
+            <Button
+              color="teal"
+              disabled={uploadState === "uploading"}
+              onClick={this.openModal}
+              content="Upload Media"
+              labelPosition="right"
+              icon="cloud upload"
+            />
+          </Button.Group>
+          <FileModal
+            modal={modal}
+            closeModal={this.closeModal}
+            uploadFile={this.uploadFile}
           />
-          <Button
-            color="teal"
-            disabled={uploadState === "uploading"}
-            onClick={this.openModal}
-            content="Upload Media"
-            labelPosition="right"
-            icon="cloud upload"
-          />
-        </Button.Group>
-        <FileModal
-          modal={modal}
-          closeModal={this.closeModal}
-          uploadFile={this.uploadFile}
-        />
+        </Form>
         <ProgressBar
           uploadState={uploadState}
           percentUploaded={percentUploaded}
