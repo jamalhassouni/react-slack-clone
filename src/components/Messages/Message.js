@@ -13,6 +13,24 @@ const isImage = message => {
   return message.hasOwnProperty("image") && !message.hasOwnProperty("content");
 };
 
+const nl2br = str => {
+  var newlineRegex = /(\r\n|\r|\n)/g;
+  if (typeof str === "number") {
+    return str;
+  } else if (typeof str !== "string") {
+    return str;
+  } else if (typeof str === "undefined") {
+    return "";
+  }
+
+  return str.split(newlineRegex).map(function(line, index) {
+    if (line.match(newlineRegex)) {
+      return React.createElement("br", { key: index });
+    }
+    return line;
+  });
+};
+
 const displayEmoji = message => {
   let matchArr;
   let lastOffset = 0;
@@ -46,9 +64,9 @@ const displayEmoji = message => {
   if (finalPartOfTheText.length) partsOfTheMessageText.push(finalPartOfTheText);
   return (
     <div>
-      {partsOfTheMessageText.map((p, i) => (
-        <span key={`msg-${i}`}>{p}</span>
-      ))}
+      {partsOfTheMessageText.map((p, i) => {
+        return <span key={`msg-${i}`}>{nl2br(p)}</span>;
+      })}
     </div>
   );
 };
