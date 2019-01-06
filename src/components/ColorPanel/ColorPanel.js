@@ -33,7 +33,7 @@ class ColorPanel extends Component {
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.removeListener();
   }
 
@@ -47,7 +47,7 @@ class ColorPanel extends Component {
 
   removeListener = () => {
     this.state.usersRef.child(`${this.state.user.uid}/colors`).off();
-  }
+  };
   openModal = () => this.setState({ modal: true });
 
   closeModal = () => this.setState({ modal: false });
@@ -107,6 +107,17 @@ class ColorPanel extends Component {
       >
         <Divider />
         <Button icon="add" size="small" color="blue" onClick={this.openModal} />
+        <React.Fragment>
+          <Divider />
+          <div
+            className="color__container"
+            onClick={() => this.props.setColors("#4c3c4c", "#eee")}
+          >
+            <div className="color__square" style={{ background: "#4c3c4c" }}>
+              <div className="color__overlay" style={{ background: "#eee" }} />
+            </div>
+          </div>
+        </React.Fragment>
         {this.displayUserColors(userColors)}
         {/* Color Picker Modal */}
         <Modal basic open={modal} onClose={this.closeModal}>
