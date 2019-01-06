@@ -21,8 +21,8 @@ class ColorPanel extends Component {
       usersRef: firebase.database().ref("users"),
       user: this.props.currentUser,
       modal: false,
-      primary: "",
-      secondary: "",
+      primary: "#4c3c4c",
+      secondary: "#eee",
       userColors: []
     };
   }
@@ -125,7 +125,10 @@ class ColorPanel extends Component {
 
           <Modal.Content>
             <Segment inverted>
-              <Label content="Primary Color" />
+              <Label
+                style={{ "margin-bottom": "1em" }}
+                content="Primary Color"
+              />
               <SliderPicker
                 color={primary}
                 onChange={this.handleChanePrimary}
@@ -133,7 +136,10 @@ class ColorPanel extends Component {
               />
             </Segment>
             <Segment inverted>
-              <Label content="Secondary Color" />
+              <Label
+                style={{ "margin-bottom": "1em" }}
+                content="Secondary Color"
+              />
               <SliderPicker
                 color={secondary}
                 onChange={this.handleChaneSecondary}
